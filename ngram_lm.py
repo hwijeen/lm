@@ -16,9 +16,9 @@ p.add_argument("--vocab_size", type=int, help="Total size of the vocabulary", de
 p.add_argument("--unk_alpha", type=float, help="The amount of probability to assign to unknown words", default=0.01)
 p.add_argument("--uni_alpha", type=float, help="The amount of probability to assign to unigrams", default=0.20)
 args = p.parse_args()
-args.train_file = f'data/train_{args.lang}_sents.txt'
-# args.test_file = f'data/train_{args.lang}_sents.txt'
-args.test_file = f'data/test_{args.lang}_sents.txt'
+args.train_file = f'data/train_{args.lang}.txt'
+args.test_file = f'data/train_{args.lang}.txt'
+# args.test_file = f'data/test_{args.lang}.txt'
 datasize = len(open(args.train_file).readlines())
 if args.char:
     print(f"{args.n}-gram for {args.lang}, char level, data size {datasize} sentences")
@@ -41,11 +41,15 @@ else:
     BI_ALPHA = 1.0 - UNK_ALPHA - UNI_ALPHA
 
 # tokenization
+import ast
 if args.char:
-    split_f = lambda line: [char for char in line.strip()]
+    # split_f = lambda line: [char for char in line.strip()]
+    split_f = lambda line: [char for char in ' '.join(ast.literal_eval(line.strip()))]
 else:
-    split_f = lambda line: [w.lower() for w in line.strip().split(" ")]
+    # split_f = lambda line: [w.lower() for w in line.strip().split(" ")]
     # split_f = lambda line: line.strip().split(" ")
+    split_f = lambda line: ast.literal_eval(line.strip())
+
 
 
 # Read in the training data
